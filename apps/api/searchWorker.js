@@ -9,5 +9,3 @@ parentPort.on("message", (articles) => {
   scored.sort((a, b) => b.score - a.score);
   parentPort.postMessage(scored);
 });
-
-module.exports = runSearchWorker;

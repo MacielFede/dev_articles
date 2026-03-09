@@ -12,9 +12,14 @@ const schema = buildSchema(`
     articles(search: String): [Article]
     article(id: ID!): Article
   }
+
+  type Mutation {
+    createArticle(title: String!, content: String!): Article!
+  }
 `);
 
 module.exports = {
   schema,
   rootValue: resolvers,
 };
+
