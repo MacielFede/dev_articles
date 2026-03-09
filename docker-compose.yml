@@ -6,4 +6,5 @@ services:
     ports:
       - "4000:4000"
     volumes:
-      - ./apps/api/data:/usr/src/app/data
+      - ./apps/api:/usr/src/app
+    command: sh -c "npm install && nodemon server.js"

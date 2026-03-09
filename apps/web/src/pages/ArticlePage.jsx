@@ -1,23 +1,30 @@
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearch } from "../context/SearchContext.jsx";
-import { useArticles } from "../hooks/useArticles.js";
+import { ArticleList } from "../components/ArticleList.jsx";
+import { request, gql } from "graphql-request";
+
+const endpoint = "http://localhost:4000/graphql";
+const query = gql`
+  query Articles($search: String) {
+    articles(search: $search) {
+      id
+      title
+      content
+    }
+  }
+`;
 
 function ArticlePage() {
   const { search, setSearch } = useSearch();
-  const articles = useArticles(search);
-  const [openIds, setOpenIds] = useState(new Set());
 
-  function toggleOpen(id) {
-    setOpenIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
-      return next;
-    });
-  }
+  const [promise, setPromise] = useState(
+    new Promise(() => Promise.resolve(null))
+  );
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setPromise(request(endpoint, query, { search: search || "" }));
+  }, [search]);
 
   return (
     <div className="page">
@@ -30,31 +37,9 @@ function ArticlePage() {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      <ul className="article-list">
-        {articles.map((article) => {
-          const isOpen = openIds.has(article.id);
-          return (
-            <li key={article.id} className="article-item">
-              <h2>{article.title}</h2>
-              <button
-                type="button"
-                className="article-toggle"
-                onClick={() => toggleOpen(article.id)}
-              >
-                {isOpen ? "Hide content" : "Show content"}
-              </button>
-              {isOpen && (
-                <div className="article-content">
-                  {article.content || <em>No content</em>}
-                </div>
-              )}
-            </li>
-          );
-        })}
-        {articles.length === 0 && (
-          <li className="article-empty">No articles found.</li>
-        )}
-      </ul>
+      <Suspense fallback={<div>Loading...</div>}>
+        <ArticleList fetchArticles={promise} />
+      </Suspense>
     </div>
   );
 }

@@ -30,15 +30,20 @@ db.serialize(() => {
 function getArticle(id) {
   console.log("[DB] getArticle", { id });
   return new Promise((resolve, reject) => {
-    db.get("SELECT id, title, content FROM articles WHERE id = ?", [id], (err, row) => {
-      if (err) return reject(err);
-      resolve(row || null);
-    });
+    db.get(
+      "SELECT id, title, content FROM articles WHERE id = ?",
+      [id],
+      (err, row) => {
+        if (err) return reject(err);
+        resolve(row || null);
+      }
+    );
   });
 }
 
-function searchArticles(search) {
+async function searchArticles(search) {
   console.log("[DB] searchArticles", { search });
+  await new Promise((resolve) => setTimeout(resolve, 5000));
   return new Promise((resolve, reject) => {
     const baseQuery = "SELECT id, title, content FROM articles";
     const params = [];
@@ -79,4 +84,3 @@ module.exports = {
   searchArticles,
   createArticle,
 };
-

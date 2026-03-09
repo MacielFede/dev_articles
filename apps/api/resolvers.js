@@ -41,7 +41,11 @@ function runSearchWorker(data) {
     worker.postMessage(data);
 
     worker.on("message", (result) => {
-      console.log("[Worker] Search worker completed with", result.length, "results");
+      console.log(
+        "[Worker] Search worker completed with",
+        result.length,
+        "results"
+      );
       worker.terminate();
       resolve(result);
     });
@@ -77,7 +81,10 @@ async function createArticle({ title, content }) {
   console.log("[Resolver] createArticle called with title:", title);
   const article = await db.createArticle({ title, content });
   cache.clear();
-  console.log("[Resolver] createArticle created article with id:", article && article.id);
+  console.log(
+    "[Resolver] createArticle created article with id:",
+    article && article.id
+  );
   return article;
 }
 

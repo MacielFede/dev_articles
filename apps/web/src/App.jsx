@@ -19,12 +19,10 @@ function App() {
         </nav>
       </header>
       <main className="app-main">
-        <Suspense fallback={<div>Loading...</div>}>
-          <Routes>
-            <Route path="/" element={<ArticlePage />} />
-            <Route path="/create" element={<CreateArticlePage />} />
-          </Routes>
-        </Suspense>
+        <Routes>
+          <Route path="/" element={<ArticlePage />} />
+          <Route path="/create" element={<CreateArticlePage />} />
+        </Routes>
       </main>
     </div>
   );
