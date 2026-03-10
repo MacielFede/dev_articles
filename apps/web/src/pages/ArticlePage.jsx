@@ -3,6 +3,16 @@ import { useSearch } from "../context/SearchContext.jsx";
 import { ArticleList } from "../components/ArticleList.jsx";
 import { request, gql } from "graphql-request";
 
+// const queryById = gql`
+//   query ArticleById($id: ID!) {
+//     article(id: $id) {
+//       id
+//       title
+//       content
+//     }
+//   }
+// `;
+
 const endpoint = "http://localhost:4000/graphql";
 const query = gql`
   query Articles($search: String) {
